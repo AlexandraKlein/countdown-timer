@@ -12,6 +12,10 @@ class CountdownTimer extends React.Component {
       countdown: this.seconds,
       hasStartedCountdown: false,
     };
+
+    this.strokeDashoffset = () =>
+      this.circumference -
+      (this.state.countdown / this.seconds) * this.circumference;
   }
 
   startTimer = () => {
@@ -29,11 +33,6 @@ class CountdownTimer extends React.Component {
       }
     }, 10);
   };
-
-  getStrokeDashOffset() {
-    const percentageLeft = this.state.countdown / this.seconds;
-    return this.circumference - percentageLeft * this.circumference;
-  }
 
   render() {
     const countdownSizeStyles = {
@@ -83,7 +82,7 @@ class CountdownTimer extends React.Component {
             <circle
               strokeDasharray={this.circumference}
               strokeDashoffset={
-                this.state.hasStartedCountdown ? this.getStrokeDashOffset() : 0
+                this.state.hasStartedCountdown ? this.strokeDashoffset() : 0
               }
               r={this.radius}
               cx={this.radius}
