@@ -7,7 +7,7 @@ class CountdownTimer extends React.Component {
   };
 
   getSeconds() {
-    return this.props.countdown * 100;
+    return this.props.count * 100;
   }
 
   getRadius() {
