@@ -1,7 +1,25 @@
 import React from "react";
 
-class CountdownTimer extends React.Component {
-  constructor(props) {
+type Props = {
+  count: number;
+  size: number;
+  strokeBgColor: string;
+  strokeColor: string;
+  strokeWidth: number;
+};
+
+type State = {
+  countdown: number;
+  hasStartedCountdown: boolean;
+};
+
+class CountdownTimer extends React.Component<Props, State> {
+  seconds: number;
+  radius: number;
+  circumference: number;
+  strokeDashoffset: () => number;
+
+  constructor(props: Props) {
     super(props);
 
     this.seconds = this.props.count * 100;
@@ -12,6 +30,10 @@ class CountdownTimer extends React.Component {
       countdown: this.seconds,
       hasStartedCountdown: false,
     };
+
+    this.strokeDashoffset = () =>
+      this.circumference -
+      (this.state.countdown / this.seconds) * this.circumference;
   }
 
   startTimer = () => {
@@ -29,11 +51,6 @@ class CountdownTimer extends React.Component {
       }
     }, 10);
   };
-
-  getStrokeDashOffset() {
-    const percentageLeft = this.state.countdown / this.seconds;
-    return this.circumference - percentageLeft * this.circumference;
-  }
 
   render() {
     const countdownSizeStyles = {
@@ -56,7 +73,9 @@ class CountdownTimer extends React.Component {
         >
           <button
             style={styles.button}
-            onClick={!this.state.hasStartedCountdown ? this.startTimer : null}
+            onClick={
+              !this.state.hasStartedCountdown ? this.startTimer : () => {}
+            }
           >
             START
           </button>
@@ -83,7 +102,7 @@ class CountdownTimer extends React.Component {
             <circle
               strokeDasharray={this.circumference}
               strokeDashoffset={
-                this.state.hasStartedCountdown ? this.getStrokeDashOffset() : 0
+                this.state.hasStartedCountdown ? this.strokeDashoffset() : 0
               }
               r={this.radius}
               cx={this.radius}
@@ -116,7 +135,7 @@ const styles = {
     height: "100%",
     transform: "rotateY(-180deg) rotateZ(-90deg)",
     overflow: "visible",
-  },
+  } as React.CSSProperties,
   button: {
     fontSize: 16,
     padding: "15px 40px",
