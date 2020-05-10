@@ -1,21 +1,17 @@
 import React from "react";
 
 class CountdownTimer extends React.Component {
-  state = {
-    countdown: this.getSeconds(),
-    hasStartedCountdown: false,
-  };
+  constructor(props) {
+    super(props);
 
-  getSeconds() {
-    return this.props.count * 100;
-  }
+    this.seconds = this.props.count * 100;
+    this.radius = this.props.size / 2;
+    this.circumference = this.props.size * Math.PI;
 
-  getRadius() {
-    return this.props.size / 2;
-  }
-
-  getCircumference() {
-    return this.props.size * Math.PI;
+    this.state = {
+      countdown: this.seconds,
+      hasStartedCountdown: false,
+    };
   }
 
   startTimer = () => {
@@ -26,27 +22,17 @@ class CountdownTimer extends React.Component {
 
       if (this.state.countdown === 0) {
         clearInterval(interval);
-        this.onCountdownEnd();
+        this.setState({
+          countdown: this.seconds,
+          hasStartedCountdown: false,
+        });
       }
     }, 10);
   };
 
-  startCountdown = () => {
-    if (!this.state.hasStartedCountdown) {
-      this.startTimer();
-    }
-  };
-
-  onCountdownEnd = () => {
-    this.setState({
-      countdown: this.getSeconds(),
-      hasStartedCountdown: false,
-    });
-  };
-
   getStrokeDashOffset() {
-    const percentageLeft = this.state.countdown / this.getSeconds();
-    return this.getCircumference() - percentageLeft * this.getCircumference();
+    const percentageLeft = this.state.countdown / this.seconds;
+    return this.circumference - percentageLeft * this.circumference;
   }
 
   render() {
@@ -68,7 +54,10 @@ class CountdownTimer extends React.Component {
             opacity: this.state.hasStartedCountdown ? 0.4 : 1,
           }}
         >
-          <button style={styles.button} onClick={this.startCountdown}>
+          <button
+            style={styles.button}
+            onClick={!this.state.hasStartedCountdown ? this.startTimer : null}
+          >
             START
           </button>
         </div>
@@ -82,9 +71,9 @@ class CountdownTimer extends React.Component {
           <p style={textStyles}>{(this.state.countdown / 100).toFixed()}s</p>
           <svg style={styles.svg}>
             <circle
-              cx={this.getRadius()}
-              cy={this.getRadius()}
-              r={this.getRadius()}
+              cx={this.radius}
+              cy={this.radius}
+              r={this.radius}
               fill="none"
               stroke={this.props.strokeBgColor}
               strokeWidth={this.props.strokeWidth}
@@ -92,13 +81,13 @@ class CountdownTimer extends React.Component {
           </svg>
           <svg style={styles.svg}>
             <circle
-              strokeDasharray={this.getCircumference()}
+              strokeDasharray={this.circumference}
               strokeDashoffset={
                 this.state.hasStartedCountdown ? this.getStrokeDashOffset() : 0
               }
-              r={this.getRadius()}
-              cx={this.getRadius()}
-              cy={this.getRadius()}
+              r={this.radius}
+              cx={this.radius}
+              cy={this.radius}
               fill="none"
               strokeLinecap="round"
               stroke={this.props.strokeColor}
