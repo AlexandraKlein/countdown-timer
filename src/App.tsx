@@ -3,12 +3,14 @@ import CountdownTimer from "./CountdownTimer";
 
 function App() {
   const [isPlaying, setIsPlaying] = React.useState(false);
+  const [seconds, setSeconds] = React.useState(5);
 
   const startTimer = () => () => {
     setIsPlaying(true);
   };
 
   const onComplete = () => {
+    setSeconds(0);
     setIsPlaying(false);
   };
 
@@ -16,8 +18,8 @@ function App() {
     <div style={styles.container}>
       <div
         style={{
-          pointerEvents: isPlaying ? "none" : "all",
-          opacity: isPlaying ? 0.4 : 1,
+          pointerEvents: isPlaying || seconds === 0 ? "none" : "all",
+          opacity: isPlaying || seconds === 0 ? 0.4 : 1,
         }}
       >
         <button style={styles.button} onClick={startTimer()}>
@@ -33,7 +35,7 @@ function App() {
         }}
       >
         <CountdownTimer
-          seconds={5}
+          seconds={seconds}
           isPlaying={isPlaying}
           onComplete={onComplete}
           size={120}
