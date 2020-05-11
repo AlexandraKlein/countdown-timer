@@ -8,83 +8,59 @@ function App() {
     setIsPlaying(true);
   };
 
-  const onTimerEnd = () => {
+  const onComplete = () => {
     setIsPlaying(false);
   };
 
   return (
-    <div className="App">
+    <div style={styles.container}>
       <div
         style={{
-          flex: 1,
-          backgroundColor: "#333",
+          pointerEvents: isPlaying ? "none" : "all",
+          opacity: isPlaying ? 0.4 : 1,
         }}
       >
-        <div
-          style={{
-            pointerEvents: isPlaying ? "none" : "all",
-            opacity: isPlaying ? 0.4 : 1,
-          }}
-        >
-          <button onClick={startTimer()}>START</button>
-        </div>
-        <div
-          style={{
-            padding: 24,
-            display: "flex",
-            justifyContent: "space-around",
-            flexWrap: "wrap",
-          }}
-        >
-          <CountdownTimer
-            count={60}
-            isPlaying={isPlaying}
-            onComplete={onTimerEnd}
-            size={80}
-            strokeBgColor="black"
-            strokeColor="lightblue"
-            strokeWidth={3}
-          />
-          <CountdownTimer
-            count={15}
-            isPlaying={isPlaying}
-            onComplete={onTimerEnd}
-            size={60}
-            strokeBgColor="black"
-            strokeColor="lemonchiffon"
-            strokeWidth={2}
-          />
-          <CountdownTimer
-            count={30}
-            isPlaying={isPlaying}
-            onComplete={onTimerEnd}
-            size={200}
-            strokeBgColor="black"
-            strokeColor="lightgreen"
-            strokeWidth={12}
-          />
-          <CountdownTimer
-            count={10}
-            isPlaying={isPlaying}
-            onComplete={onTimerEnd}
-            size={90}
-            strokeBgColor="black"
-            strokeColor="lightcoral"
-            strokeWidth={4}
-          />
-          <CountdownTimer
-            count={5}
-            isPlaying={isPlaying}
-            onComplete={onTimerEnd}
-            size={120}
-            strokeBgColor="black"
-            strokeColor="lavender"
-            strokeWidth={8}
-          />
-        </div>
+        <button style={styles.button} onClick={startTimer()}>
+          START
+        </button>
+      </div>
+      <div
+        style={{
+          padding: 24,
+          display: "flex",
+          justifyContent: "space-around",
+          flexWrap: "wrap",
+        }}
+      >
+        <CountdownTimer
+          seconds={5}
+          isPlaying={isPlaying}
+          onComplete={onComplete}
+          size={120}
+          strokeBgColor="black"
+          strokeColor="lavender"
+          strokeWidth={8}
+        />
       </div>
     </div>
   );
 }
 
+const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: "#333",
+  },
+  button: {
+    fontSize: 16,
+    padding: "15px 40px",
+    margin: "10px auto 30px",
+    display: "block",
+    backgroundColor: "#4d4d4d",
+    color: "lightgray",
+    border: "none",
+    cursor: "pointer",
+    outline: 0,
+  },
+};
 export default App;

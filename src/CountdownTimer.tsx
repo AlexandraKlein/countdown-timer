@@ -1,9 +1,9 @@
 import React from "react";
 
 type Props = {
-  count: number;
   isPlaying: boolean;
   onComplete: () => void;
+  seconds: number;
   size: number;
   strokeBgColor: string;
   strokeColor: string;
@@ -24,7 +24,7 @@ class CountdownTimer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.milliseconds = this.props.count * 1000;
+    this.milliseconds = this.props.seconds * 1000;
     this.radius = this.props.size / 2;
     this.circumference = this.props.size * Math.PI;
 
@@ -81,41 +81,39 @@ class CountdownTimer extends React.Component<Props, State> {
     const seconds = (this.state.countdown / 1000).toFixed();
 
     return (
-      <div>
-        <div
-          style={Object.assign(
-            {},
-            styles.countdownContainer,
-            countdownSizeStyles
-          )}
-        >
-          <p style={textStyles}>{seconds}s</p>
-          <svg style={styles.svg}>
-            <circle
-              cx={this.radius}
-              cy={this.radius}
-              r={this.radius}
-              fill="none"
-              stroke={this.props.strokeBgColor}
-              strokeWidth={this.props.strokeWidth}
-            ></circle>
-          </svg>
-          <svg style={styles.svg}>
-            <circle
-              strokeDasharray={this.circumference}
-              strokeDashoffset={
-                this.state.isPlaying ? this.strokeDashoffset() : 0
-              }
-              r={this.radius}
-              cx={this.radius}
-              cy={this.radius}
-              fill="none"
-              strokeLinecap="round"
-              stroke={this.props.strokeColor}
-              strokeWidth={this.props.strokeWidth}
-            ></circle>
-          </svg>
-        </div>
+      <div
+        style={Object.assign(
+          {},
+          styles.countdownContainer,
+          countdownSizeStyles
+        )}
+      >
+        <p style={textStyles}>{seconds}s</p>
+        <svg style={styles.svg}>
+          <circle
+            cx={this.radius}
+            cy={this.radius}
+            r={this.radius}
+            fill="none"
+            stroke={this.props.strokeBgColor}
+            strokeWidth={this.props.strokeWidth}
+          ></circle>
+        </svg>
+        <svg style={styles.svg}>
+          <circle
+            strokeDasharray={this.circumference}
+            strokeDashoffset={
+              this.state.isPlaying ? this.strokeDashoffset() : 0
+            }
+            r={this.radius}
+            cx={this.radius}
+            cy={this.radius}
+            fill="none"
+            strokeLinecap="round"
+            stroke={this.props.strokeColor}
+            strokeWidth={this.props.strokeWidth}
+          ></circle>
+        </svg>
       </div>
     );
   }
@@ -138,17 +136,6 @@ const styles = {
     transform: "rotateY(-180deg) rotateZ(-90deg)",
     overflow: "visible",
   } as React.CSSProperties,
-  button: {
-    fontSize: 16,
-    padding: "15px 40px",
-    margin: "10px auto 30px",
-    display: "block",
-    backgroundColor: "#4d4d4d",
-    color: "lightgray",
-    border: "none",
-    cursor: "pointer",
-    outline: 0,
-  },
 };
 
 export default CountdownTimer;
