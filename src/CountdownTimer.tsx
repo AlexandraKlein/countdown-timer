@@ -2,6 +2,8 @@ import React from "react";
 
 type Props = {
   count: number;
+  isPlaying: boolean;
+  onComplete: () => void;
   size: number;
   strokeBgColor: string;
   strokeColor: string;
@@ -10,11 +12,11 @@ type Props = {
 
 type State = {
   countdown: number;
-  hasStartedCountdown: boolean;
+  isPlaying: boolean;
 };
 
 class CountdownTimer extends React.Component<Props, State> {
-  seconds: number;
+  milliseconds: number;
   radius: number;
   circumference: number;
   strokeDashoffset: () => number;
@@ -22,31 +24,44 @@ class CountdownTimer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.seconds = this.props.count * 100;
+    this.milliseconds = this.props.count * 1000;
     this.radius = this.props.size / 2;
     this.circumference = this.props.size * Math.PI;
 
     this.state = {
-      countdown: this.seconds,
-      hasStartedCountdown: false,
+      countdown: this.milliseconds,
+      isPlaying: false,
     };
 
     this.strokeDashoffset = () =>
       this.circumference -
-      (this.state.countdown / this.seconds) * this.circumference;
+      (this.state.countdown / this.milliseconds) * this.circumference;
+  }
+
+  componentDidMount() {
+    if (this.props.isPlaying) {
+      this.startTimer();
+    }
+  }
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (prevProps.isPlaying !== this.props.isPlaying && this.props.isPlaying) {
+      this.startTimer();
+    }
   }
 
   startTimer = () => {
-    this.setState({ hasStartedCountdown: true });
+    this.setState({ isPlaying: true });
 
     const interval = setInterval(() => {
-      this.setState({ countdown: this.state.countdown - 1 });
+      this.setState({ countdown: this.state.countdown - 10 });
 
       if (this.state.countdown === 0) {
         clearInterval(interval);
+
+        this.props.onComplete();
         this.setState({
-          countdown: this.seconds,
-          hasStartedCountdown: false,
+          countdown: this.milliseconds,
         });
       }
     }, 10);
@@ -63,23 +78,10 @@ class CountdownTimer extends React.Component<Props, State> {
       fontSize: this.props.size * 0.3,
     };
 
+    const seconds = (this.state.countdown / 1000).toFixed();
+
     return (
       <div>
-        <div
-          style={{
-            pointerEvents: this.state.hasStartedCountdown ? "none" : "all",
-            opacity: this.state.hasStartedCountdown ? 0.4 : 1,
-          }}
-        >
-          <button
-            style={styles.button}
-            onClick={
-              !this.state.hasStartedCountdown ? this.startTimer : () => {}
-            }
-          >
-            START
-          </button>
-        </div>
         <div
           style={Object.assign(
             {},
@@ -87,7 +89,7 @@ class CountdownTimer extends React.Component<Props, State> {
             countdownSizeStyles
           )}
         >
-          <p style={textStyles}>{(this.state.countdown / 100).toFixed()}s</p>
+          <p style={textStyles}>{seconds}s</p>
           <svg style={styles.svg}>
             <circle
               cx={this.radius}
@@ -102,7 +104,7 @@ class CountdownTimer extends React.Component<Props, State> {
             <circle
               strokeDasharray={this.circumference}
               strokeDashoffset={
-                this.state.hasStartedCountdown ? this.strokeDashoffset() : 0
+                this.state.isPlaying ? this.strokeDashoffset() : 0
               }
               r={this.radius}
               cx={this.radius}
