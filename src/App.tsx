@@ -11,7 +11,7 @@ function App() {
 
   const onComplete = () => {
     // setSeconds(0);
-    // setIsPlaying(false);
+    setIsPlaying(false);
   };
 
   const isComplete = seconds === 0;
