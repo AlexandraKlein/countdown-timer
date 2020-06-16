@@ -10,16 +10,18 @@ function App() {
   };
 
   const onComplete = () => {
-    setSeconds(0);
-    setIsPlaying(false);
+    // setSeconds(0);
+    // setIsPlaying(false);
   };
+
+  const isComplete = seconds === 0;
 
   return (
     <div style={styles.container}>
       <div
         style={{
-          pointerEvents: isPlaying || seconds === 0 ? "none" : "all",
-          opacity: isPlaying || seconds === 0 ? 0.4 : 1,
+          pointerEvents: isPlaying || isComplete ? "none" : "all",
+          opacity: isPlaying || isComplete ? 0.4 : 1,
         }}
       >
         <button style={styles.button} onClick={startTimer()}>

@@ -137,7 +137,7 @@ const styles = {
     alignItems: "center",
     position: "relative",
     margin: "auto",
-  },
+  } as React.CSSProperties,
   svg: {
     position: "absolute",
     top: 0,
